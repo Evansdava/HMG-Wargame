@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex container-fluid justify-content-center">
+    <!-- Submitting the form saves the map -->
+    <form action="/map/save/{{map.name}}" method="POST">
+        {% include 'partials/map_display.html' %}
+        <br>
+        <br>
+        <button class="btn btn-primary m-4" type="submit">Save Map</button>
+        <!-- Reloading the page conserves the query string with settings -->
+        <button class="btn btn-outline-primary ml-4 mb-2"onClick="window.location.reload();" type="button">Generate New with These Settings</button>
+    </form>
+</div>
+{% endblock %}

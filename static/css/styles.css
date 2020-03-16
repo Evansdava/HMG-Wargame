@@ -1,0 +1,29 @@
+/* Hexes are made from these classes, with variable colors */
+.hex {
+    float: left;
+    margin-left: 1px;
+    margin-bottom: -13px;
+}
+.hex .top {
+    width: 0;
+    border-bottom: 15px solid var(--bg-color);
+    border-left: 26px solid transparent;
+    border-right: 26px solid transparent;
+}
+.hex .middle {
+    width: 52px;
+    height: 30px;
+    background: var(--bg-color);
+}
+.hex .bottom {
+    width: 0;
+    border-top: 15px solid var(--bg-color);
+    border-left: 26px solid transparent;
+    border-right: 26px solid transparent;
+}
+.hex-row {
+    clear: left;
+}
+.hex-row.even {
+    margin-left: 26px;
+}

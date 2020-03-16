@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <!-- Title -->
+        <div class="row mt-5">
+            <div class="d-inline-flex col-md-12 justify-content-center">
+                <h1 class="text-center">Welcome to HexMapGen!</h1>
+            </div>
+        </div>
+        <!-- Instructions -->
+        <div class="d-flex row justify-content-center mt-3">
+            <div class="col-md-auto">
+                <p>Please insert values below, or leave them as default, and a map will be generated using them.</p>
+            </div>
+        </div>
+        <!-- Description -->
+        <div class="d-flex row justify-content-center">
+            <div class="col-md-auto">
+                <p>Forests are green, rivers are blue, roads are orange, and buildings are red.</p>
+                <ul>
+                    <li>
+                        <p>Forests can spawn anywhere, and are more likely to spawn next to other forests</p>
+                    </li>
+                    <li>
+                        <p>Rivers spawn from an edge, and meander across the map afterwards. Rivers can overwrite forests that are in their path.</p>
+                    </li>
+                    <li>
+                        <p>Roads spawn from an edge and follow straight lines to another edge. Roads can overwrite rivers and forests in their path.</p>
+                    </li>
+                    <li>
+                        <p>Buildings spawn next to roads or other buildings, and can overwrite forests, but not rivers or roads.</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Form with each of the settings, pre-filled to defaults -->
+        <div class="d-flex justify-content-center row mt-5 pb-5">
+            <form action="/map">
+                <div class="form-group">
+                    <label for="length">Length (Number of rows)</label>
+                    <input class="form-control" id="length" name="length" value="15" type="number">
+                </div>
+                <div class="form-group">
+                    <label for="width">Width (Number of hexes per row)</label>
+                    <input class="form-control" id="width" name="width" value="15" type="number">
+                </div>
+                <div class="form-group">
+                    <label for="f_chance">Forest Chance (Chance to spawn a forest in a given hex)</label>
+                    <input class="form-control" id="f_chance" name="f_chance" value="0.10" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="ri_chance">River Chance (Chance to spawn a river on any given edge hex)</label>
+                    <input class="form-control" id="ri_chance" name="ri_chance" value="0.02" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="ro_chance">Road Chance (Chance to spawn a road, on any given edge hex)</label>
+                    <input class="form-control" id="ro_chance" name="ro_chance" value="0.02" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="b_chance">Building Chance (Chance to spawn a building next to a road, or another building)</label>
+                    <input class="form-control" id="b_chance" name="b_chance" value="0.20" type="text">
+                </div>
+                <button class="btn btn-primary" type="submit">Generate</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

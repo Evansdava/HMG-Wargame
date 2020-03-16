@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex container-fluid justify-content-center">
+    <!-- Submitting the form changes the name, the delete button is a redirect -->
+    <form action="/map/edit/{{map.name}}" method="POST">
+        <button class="btn btn-outline-primary ml-3 mt-2" type="submit">Rename</button>
+        {% include 'partials/map_display.html' %}
+        <br>
+        <br>
+        <a href="/map/delete/{{map.name}}"><button class="btn btn-danger m-4" type="button">Delete Map</button></a>
+    </form>
+</div>
+{% endblock %}
