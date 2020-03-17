@@ -48,6 +48,9 @@ class Map():
                 count += 1
         return string
 
+    def __getitem__(self, position):
+        return self.hexes[position]
+
     def edge_crawl(self, key, chance):
         """Travels around edges and starts features based on a random chance.
 

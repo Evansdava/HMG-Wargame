@@ -4,10 +4,11 @@
 class Hex():
     """The class that governs individual hexes on the map"""
 
-    def __init__(self, id_num, terrain):
+    def __init__(self, id_num, terrain, owner=None):
         """Initializes the hex, setting the id number and relations"""
         self.id = id_num
         self.terrain = terrain
+        self.owner = owner
         self.BR = None  # Bottom Right
         self.MR = None  # Middle Right
         self.BL = None  # Bottom Left
@@ -28,7 +29,6 @@ class Hex():
 
         Returns: None
         """
-
         # Whichever side is given as an argument,
         # the opposite of `other` is connected
         if side == "ML":
