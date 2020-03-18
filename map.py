@@ -1,4 +1,5 @@
 from hex import Hex
+from kingdom import Kingdom
 from random import random, choice
 
 
@@ -7,7 +8,8 @@ class Map():
 
     def __init__(self, name="", length=15, width=15,
                  for_chance=0.1, riv_chance=0.02,
-                 road_chance=0.02, build_chance=0.2):
+                 road_chance=0.02, build_chance=0.2,
+                 kingdoms=0):
         """Initialize values from which to generate terrain"""
         self.name = name
 
@@ -28,6 +30,14 @@ class Map():
         # Generating the map
         self.generate()
 
+        # Populating the map with kingdoms
+        self.kingdoms = []
+        for king in range(kingdoms):
+            tile = choice(self.hexes)
+            while tile.owner is not None:
+                tile = choice(self.hexes)
+            self.kingdoms.append(Kingdom(str(king), self, [tile]))
+
     def __str__(self):
         """Return a string visualization of the map"""
         string = ""
@@ -39,7 +49,7 @@ class Map():
                 if count % 2 == 0:
                     string += f"{hex}"
                 else:
-                    string += f" {hex}"
+                    string += f"  {hex}"
             # Checking that the row hasn't ended
             if hex.MR is not None:
                 string += f" {hex.MR}"
@@ -292,7 +302,7 @@ class Map():
 
 if __name__ == '__main__':
     # Running the program generates and prints a map
-    map = Map(29, 29)
+    map = Map(29, 29, kingdoms=4)
     # map.generate_forests()
     # map.generate_rivers()
     # roads = map.generate_roads()

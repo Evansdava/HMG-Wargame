@@ -18,7 +18,8 @@ class Hex():
 
     def __str__(self):
         """Return a string representation of this hex by terrain"""
-        return f"{self.terrain}"
+        return f"{self.terrain}{str(self.owner)}" if self.owner is not None\
+            else f"{self.terrain}."
 
     def connect(self, side, other):
         """Change the references of two hexes to match each other
