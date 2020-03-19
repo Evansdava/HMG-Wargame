@@ -7,8 +7,8 @@ class Map():
     """The class for an overall map made of hexes"""
 
     def __init__(self, name="", length=15, width=15,
-                 for_chance=0.1, riv_chance=0.02,
-                 road_chance=0.02, build_chance=0.2,
+                 for_chance=0.2, riv_chance=0.04,
+                 road_chance=0.04, build_chance=0.3,
                  kingdoms=0):
         """Initialize values from which to generate terrain"""
         self.name = name

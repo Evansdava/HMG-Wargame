@@ -11,10 +11,10 @@ class Kingdom():
         self.die = field.len
 
         # Easy reference for modifiers
-        self.half = self.die // 2
-        self.third = self.die // 3
-        self.fourth = self.die // 4
-        self.eighth = self.die // 8
+        self.half = self.field.len // 2
+        self.third = self.field.len // 3
+        self.fourth = self.field.len // 4
+        self.eighth = self.field.len // 8
 
         # Int to determine stability
         # 0-2, resets to 0 at beginning of turn
@@ -84,9 +84,9 @@ class Kingdom():
 
         if power == "mil":
             if tile.terrain == "B":
-                value = 4
-            elif tile.terrain == "W":
                 value = 3
+            elif tile.terrain == "W":
+                value = 2
             elif tile.terrain == "F":
                 value = 2
         if power == "dip":
@@ -113,7 +113,9 @@ class Kingdom():
         tile.owner = self
         self.territory.append(tile)
         for power in self.powers.keys():
-            self.powers[power] += self._get_tile_value(tile, power)
+            if self.powers[power] < self.die - 1:
+                self.powers[power] += min(self._get_tile_value(tile, power),
+                                          self.die - 1 - self.powers[power])
         self.borders = self._get_borders()
 
     def _choose_attack_target(self):
@@ -180,20 +182,28 @@ class Kingdom():
 
     def _set_rival(self):
         """Set the most threatening kingdom as the rival"""
-        threats = [self._calculate_threat(kingdom) for kingdom
-                   in self.field.kingdoms if kingdom != self]
+        kingdoms = self.field.kingdoms.copy()
+        kingdoms.remove(self)
+        threats = [self._calculate_threat(kingdom) for kingdom in kingdoms]
         greatest = sorted(threats, reverse=True)[0]
-        self.rival = self.field.kingdoms[threats.index(greatest)]
+        self.rival = kingdoms[threats.index(greatest)]
+        if self.rival in self.allies:
+            self.allies.remove(self.rival)
+            self.rival.allies.remove(self)
 
     def _choose_ally_target(self):
         """Choose a target to ally"""
         # Choose the most threatening kingdom that isn' a rival
-        threats = [self._calculate_threat(kingdom) for kingdom
-                   in self.field.kingdoms if kingdom != self
-                   and kingdom != self.rival]
+        kingdoms = self.field.kingdoms.copy()
+        kingdoms.remove(self)
+        kingdoms.remove(self.rival)
+        for ally in self.allies:
+            if ally in kingdoms:
+                kingdoms.remove(ally)
+        threats = [self._calculate_threat(kingdom) for kingdom in kingdoms]
         if len(threats) > 0:
             ally = sorted(threats, reverse=True)[0]
-            return self.field.kingdoms[threats.index(ally)]
+            return kingdoms[threats.index(ally)]
         else:
             return None
 
@@ -204,9 +214,11 @@ class Kingdom():
         stable_mods = self._get_stable_mods(other, power)
         self_mod += stable_mods[0]
         other_mod += stable_mods[1]
-        if self.powers[power] + self_mod < 0:
+        self_target = min(self.powers[power] + self_mod, self.die - 1)
+        other_target = min(other.powers[power] + other_mod, self.die - 1)
+        if self_target < 0:
             return False
-        elif other.powers[power] + other_mod < 0:
+        elif other_target < 0:
             return True
         # Loop until a value is returned
         while True:
@@ -215,8 +227,8 @@ class Kingdom():
             other_roll = randint(0, other.die)
 
             # Success is based on whichever power is used
-            success = self_roll <= self.powers[power] + self_mod
-            other_success = other_roll <= other.powers[power] + other_mod
+            success = self_roll <= self_target
+            other_success = other_roll <= other_target
 
             # If one is successful and the other isn't, there is a winner
             if success and not other_success:
@@ -267,9 +279,11 @@ class Kingdom():
         other_mod = border_mod
 
         alliance = self.conflict(other, "dip", self_mod, other_mod)
-        if alliance:
-            self.allies.append(other)
-            other.allies.append(self)
+        if alliance and other.rival != self:
+            if other not in self.allies:
+                self.allies.append(other)
+            if self not in other.allies:
+                other.allies.append(self)
             return True
         else:
             return False
@@ -279,11 +293,13 @@ class Kingdom():
         interference = self.rival.conflict(self, "adm")
         if interference:
             self.stable = 1
-            self.powers["adm"] += 5
+            if self.powers["adm"] < self.die - 1:
+                self.powers["adm"] += min(2, self.die - self.powers["adm"] - 1)
             return False
         else:
             self.stable = 2
-            self.powers["adm"] += 10
+            if self.powers["adm"] < self.die - 1:
+                self.powers["adm"] += min(5, self.die - self.powers["adm"] - 1)
             return True
 
     def take_turn(self):
@@ -300,14 +316,22 @@ class Kingdom():
             stable_chance = 7
         else:
             ally_chance = 5
-            stable_chance = 5
+            stable_chance = 3
+
+        # If all other kingdoms are allies or rivals, can't ally
+        if len(self.allies) + 2 == len(self.field.kingdoms):
+            ally_chance = -1
+
+        # If high on admin, don't stabilize
+        if self.powers["adm"] - len(self) > 15:
+            stable_chance = 0
 
         # If low on admin, can't attack
-        if self.powers["adm"] <= len(self):
+        if self.powers["adm"] + 1 <= len(self):
             attack_chance = -1
             stable_chance = 10
         else:
-            attack_chance = self._choose_attack_target()[1]
+            attack_chance = max(self._choose_attack_target()[1], 1)
 
         max_chance = attack_chance + ally_chance + stable_chance
         roll = randint(0, max_chance)
@@ -318,8 +342,6 @@ class Kingdom():
             ally = self._choose_ally_target()
             if ally is not None:
                 self.ally(ally)
-            else:
-                self.stabilize()
         elif roll <= attack_chance + ally_chance + stable_chance:
             self.stabilize()
 

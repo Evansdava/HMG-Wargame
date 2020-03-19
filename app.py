@@ -45,13 +45,13 @@ def show_map():
     if width == "" or width is None:
         width = 15
     if f_chance == "" or f_chance is None:
-        f_chance = 0.10
+        f_chance = 0.20
     if ri_chance == "" or ri_chance is None:
-        ri_chance = 0.02
+        ri_chance = 0.04
     if ro_chance == "" or ro_chance is None:
-        ro_chance = 0.02
+        ro_chance = 0.04
     if b_chance == "" or b_chance is None:
-        b_chance = 0.20
+        b_chance = 0.30
 
     # Generating the map and assigning it to the global variable
     current_map = Map(name, length, width, f_chance,
