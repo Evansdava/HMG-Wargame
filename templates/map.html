@@ -4,6 +4,7 @@
 <script type="text/python">
     from browser import document
     from browser.timer import request_animation_frame as raf
+    from browser.timer import cancel_animation_frame as caf
     from browser.timer import set_timeout
     from static.scripts.python.game import GameRunner
     from static.scripts.python.map import Map
@@ -40,6 +41,7 @@
         else:
             hex.owner = None
 
+    id = 0
     print("Map initialized")
     gr = GameRunner(field)
     print("Game ready")
@@ -47,15 +49,30 @@
     def run(ev):
         raf(turn)
 
+    def stop(ev):
+        global id
+        caf(id)
+
     def turn(i):
         global gr
+        global id
         cont = gr.turn()
         print(gr.field)
         for hex in gr.field.hexes:
             document[str(hex.id)].style.backgroundColor = colors[str(hex.owner)]
-        i = raf(turn)
+
+        for kingdom in gr.field.kingdoms:
+            print("Kingdom", str(kingdom), "Size:", len(kingdom))
+            print(f"ADM: {kingdom.powers['adm']}", end=" ")
+            print(f"DIP: {kingdom.powers['dip']}", end=" ")
+            print(f"MIL: {kingdom.powers['mil']}")
+            print(f"Rival: {kingdom.rival}", end=" ")
+            print(f"Allies: {[str(king) for king in kingdom.allies]}")
+
+        id = raf(turn)
 
     document["run_sim"].bind("click", run)
+    document["stop_sim"].bind("click", stop)
 </script>
 <div class="d-flex container-fluid justify-content-center flex-nowrap">
     <!-- Submitting the form saves the map -->
@@ -64,6 +81,7 @@
         <br>
         <br>
         <button id="run_sim" class="btn btn-success m-4" type="button">Run Simulation</button>
+        <button id="stop_sim" class="btn btn-danger m-4" type="button">Stop Simulation</button>
         <button class="btn btn-primary m-4" type="submit">Save Map</button>
         <!-- Reloading the page conserves the query string with settings -->
         <button class="btn btn-outline-primary ml-4 mb-2" onClick="window.location.reload();" type="button">Generate New with These Settings</button>
