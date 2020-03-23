@@ -3,7 +3,6 @@ import os
 import sys
 import pickle
 import redis
-import jsonpickle as jp
 try:
     from static.scripts.python.map import Map
 except ModuleNotFoundError:
@@ -64,11 +63,11 @@ def show_map():
     # Generating the map and assigning it to the global variable
     current_map = Map(name, length, width, f_chance,
                       ri_chance, ro_chance, b_chance, kingdoms)
-    map_json = jp.encode(current_map)
+    hexes = current_map.hexes
     # map_pick = pickle.dumps(current_map)
     # Printing an ascii representation to ensure it generated properly
     print(current_map)
-    return render_template('map.html', map=current_map, map_json=map_json)
+    return render_template('map.html', map=current_map, hexes=hexes)
 
 
 @app.route('/map/save/<map_name>', methods=["POST"])

@@ -7,7 +7,6 @@
     from browser.timer import set_timeout
     from static.scripts.python.game import GameRunner
     from static.scripts.python.map import Map
-    # from jsonpickle import decode
     # import pickle
 
     colors = {
@@ -30,9 +29,10 @@
     }
 
     field = Map(kingdoms=4)
-    # field.hexes = {{ map.hexes|safe }}
-    print("Map decoded")
+    # field.hexes = {{ hexes|safe }}
+    print("Map initialized")
     gr = GameRunner(field)
+    print("Game ready")
 
     def run(ev):
         # while gr.turn() is not False:
@@ -40,10 +40,6 @@
         #     for hex in gr.field.hexes:
         #         document[str(hex.id)].style.backgroundColor = colors[str(hex.owner)]
 
-        # while(True):
-        set_timeout(req_frame, 1000)
-
-    def req_frame():
         raf(turn)
 
     def turn(i):
