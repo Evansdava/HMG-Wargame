@@ -60,12 +60,12 @@
             document[str(hex.id)].style.backgroundColor = colors[str(hex.owner)]
 
         for kingdom in gr.field.kingdoms:
-            print("Kingdom", str(kingdom), "Size:", len(kingdom))
+            print("Kingdom", colors[str(kingdom)], "Size:", len(kingdom))
             print(f"ADM: {kingdom.powers['adm']}", end=" ")
             print(f"DIP: {kingdom.powers['dip']}", end=" ")
             print(f"MIL: {kingdom.powers['mil']}")
-            print(f"Rival: {kingdom.rival}", end=" ")
-            print(f"Allies: {[str(king) for king in kingdom.allies]}")
+            print(f"Rival: {colors[str(kingdom.rival)]}", end=" ")
+            print(f"Allies: {[colors[str(king)] for king in kingdom.allies]}")
 
         id = raf(turn)
 
