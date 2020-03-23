@@ -1,10 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for
 import requests
 import os
 import sys
 import pickle
 import redis
-from map import Map
+import jsonpickle as jp
+try:
+    from static.scripts.python.map import Map
+except ModuleNotFoundError:
+    from map import Map
+from flask import Flask, render_template, request, redirect, url_for
+
 
 # Setting up redis/flask environments
 redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
@@ -38,6 +43,7 @@ def show_map():
     ri_chance = request.args.get('ri_chance')
     ro_chance = request.args.get('ro_chance')
     b_chance = request.args.get('b_chance')
+    kingdoms = request.args.get('kingdoms')
 
     # Default values
     if length == "" or length is None:
@@ -52,13 +58,17 @@ def show_map():
         ro_chance = 0.04
     if b_chance == "" or b_chance is None:
         b_chance = 0.30
+    if kingdoms == "" or kingdoms is None:
+        kingdoms = 4
 
     # Generating the map and assigning it to the global variable
     current_map = Map(name, length, width, f_chance,
-                      ri_chance, ro_chance, b_chance)
+                      ri_chance, ro_chance, b_chance, kingdoms)
+    map_json = jp.encode(current_map)
+    # map_pick = pickle.dumps(current_map)
     # Printing an ascii representation to ensure it generated properly
     print(current_map)
-    return render_template('map.html', map=current_map)
+    return render_template('map.html', map=current_map, map_json=map_json)
 
 
 @app.route('/map/save/<map_name>', methods=["POST"])

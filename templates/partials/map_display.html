@@ -16,20 +16,42 @@
         Jinja macros maintain DRY code-->
         {% macro color(key) -%}
             {% if key == "F" %}
-                style="--bg-color: green;"
+                green
             {% elif key == "W" %}
-                style="--bg-color: deepskyblue;"
+                deepskyblue
             {% elif key == "R" %}
-                style="--bg-color: orange;"
+                orange
             {% elif key == "B" %}
-                style="--bg-color: darkred;"
+                darkred
             {% elif key == "." %}
-                style="--bg-color: lightgray;"
+                lightgray
+            {% elif key.name == "0" %}
+                limegreen
+            {% elif key.name == "1" %}
+                red
+            {% elif key.name == "2" %}
+                gold
+            {% elif key.name == "3" %}
+                darkslateblue
+            {% elif key.name == "4" %}
+                hotpink
+            {% elif key.name == "5" %}
+                darkseagreen
+            {% elif key.name == "6" %}
+                teal
+            {% elif key.name == "7" %}
+                steelblue
+            {% elif key.name == "8" %}
+                burlywood
+            {% elif key.name == "9" %}
+                darkviolet
+            {% elif key == None %}
+                lightgray
             {% endif %}
         {%- endmacro %}
-        <div class="top" {{color(hex.terrain)}}></div>
-        <div class="middle" {{color(hex.terrain)}}></div>
-        <div class="bottom" {{color(hex.terrain)}}></div>
+        <div class="top" style="--bg-color: {{color(hex.terrain)}};"></div>
+        <div id="{{hex.id}}" class="middle" style="--bg-color: {{color(hex.owner)}};"></div>
+        <div class="bottom" style="--bg-color: {{color(hex.terrain)}};"></div>
     </div>
     <!-- End a row when the hex has no MR neighbor -->
     {% if hex.MR == None %}

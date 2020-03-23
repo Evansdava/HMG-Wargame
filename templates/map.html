@@ -1,15 +1,71 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<!-- <div class="d-flex container-fluid justify-content-center flex-nowrap"> -->
+<script type="text/python">
+    from browser import document
+    from browser.timer import request_animation_frame as raf
+    from browser.timer import set_timeout
+    from static.scripts.python.game import GameRunner
+    from static.scripts.python.map import Map
+    # from jsonpickle import decode
+    # import pickle
+
+    colors = {
+        "F":"green",
+        "W":"deepskyblue",
+        "R":"orange",
+        "B":"darkred",
+        ".":"lightgray",
+        "0":"limegreen",
+        "1":"red",
+        "2":"gold",
+        "3":"darkslateblue",
+        "4":"hotpink",
+        "5":"darkseagreen",
+        "6":"teal",
+        "7":"steelblue",
+        "8":"burlywood",
+        "9":"darkviolet",
+        "None":"lightgray",
+    }
+
+    field = Map(kingdoms=4)
+    # field.hexes = {{ map.hexes|safe }}
+    print("Map decoded")
+    gr = GameRunner(field)
+
+    def run(ev):
+        # while gr.turn() is not False:
+        #     print(gr.field)
+        #     for hex in gr.field.hexes:
+        #         document[str(hex.id)].style.backgroundColor = colors[str(hex.owner)]
+
+        # while(True):
+        set_timeout(req_frame, 1000)
+
+    def req_frame():
+        raf(turn)
+
+    def turn(i):
+        global gr
+        cont = gr.turn()
+        print(gr.field)
+        for hex in gr.field.hexes:
+            document[str(hex.id)].style.backgroundColor = colors[str(hex.owner)]
+        i = raf(turn)
+
+    document["run_sim"].bind("click", run)
+</script>
+<div class="d-flex container-fluid justify-content-center flex-nowrap">
     <!-- Submitting the form saves the map -->
     <form action="/map/save/{{map.name}}" method="POST">
         {% include 'partials/map_display.html' %}
         <br>
         <br>
+        <button id="run_sim" class="btn btn-success m-4" type="button">Run Simulation</button>
         <button class="btn btn-primary m-4" type="submit">Save Map</button>
         <!-- Reloading the page conserves the query string with settings -->
-        <button class="btn btn-outline-primary ml-4 mb-2"onClick="window.location.reload();" type="button">Generate New with These Settings</button>
+        <button class="btn btn-outline-primary ml-4 mb-2" onClick="window.location.reload();" type="button">Generate New with These Settings</button>
     </form>
-<!-- </div> -->
+</div>
 {% endblock %}
