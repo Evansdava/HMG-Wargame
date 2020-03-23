@@ -1,5 +1,3 @@
-# from random import random
-
 
 class Hex(object):
     """The class that governs individual hexes on the map"""

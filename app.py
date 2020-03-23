@@ -3,6 +3,7 @@ import os
 import sys
 import pickle
 import redis
+# import json
 try:
     from static.scripts.python.map import Map
 except ModuleNotFoundError:
@@ -63,6 +64,7 @@ def show_map():
     # Generating the map and assigning it to the global variable
     current_map = Map(name, length, width, f_chance,
                       ri_chance, ro_chance, b_chance, kingdoms)
+    # hexes = pickle.dumps(current_map.hexes)
     hexes = current_map.hexes
     # map_pick = pickle.dumps(current_map)
     # Printing an ascii representation to ensure it generated properly

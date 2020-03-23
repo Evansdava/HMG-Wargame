@@ -7,7 +7,8 @@
     from browser.timer import set_timeout
     from static.scripts.python.game import GameRunner
     from static.scripts.python.map import Map
-    # import pickle
+    import json
+    import pickle
 
     colors = {
         "F":"green",
@@ -28,18 +29,22 @@
         "None":"lightgray",
     }
 
-    field = Map(kingdoms=4)
-    # field.hexes = {{ hexes|safe }}
+    field = Map(length={{map.length}}, width={{map.width}}, kingdoms={{ map.kingdoms|length }})
+    kings = [kingdom.name for kingdom in field.kingdoms]
+    for hex in field.hexes:
+        hex_info = document[str(hex.id)].parent.attrs["name"]
+        hex.terrain = hex_info[0]
+        if hex_info[1] in kings:
+            hex.owner = field.kingdoms[kings.index(hex_info[1])]
+            hex.owner.territory = [hex]
+        else:
+            hex.owner = None
+
     print("Map initialized")
     gr = GameRunner(field)
     print("Game ready")
 
     def run(ev):
-        # while gr.turn() is not False:
-        #     print(gr.field)
-        #     for hex in gr.field.hexes:
-        #         document[str(hex.id)].style.backgroundColor = colors[str(hex.owner)]
-
         raf(turn)
 
     def turn(i):

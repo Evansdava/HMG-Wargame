@@ -49,9 +49,11 @@
                 lightgray
             {% endif %}
         {%- endmacro %}
-        <div class="top" style="--bg-color: {{color(hex.terrain)}};"></div>
-        <div id="{{hex.id}}" class="middle" style="--bg-color: {{color(hex.owner)}};"></div>
-        <div class="bottom" style="--bg-color: {{color(hex.terrain)}};"></div>
+        <div name="{{hex}}">
+            <div class="top" style="--bg-color: {{color(hex.terrain)}};"></div>
+            <div id="{{hex.id}}" class="middle" style="--bg-color: {{color(hex.owner)}};"></div>
+            <div class="bottom" style="--bg-color: {{color(hex.terrain)}};"></div>
+        </div>
     </div>
     <!-- End a row when the hex has no MR neighbor -->
     {% if hex.MR == None %}
