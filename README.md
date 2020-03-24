@@ -6,14 +6,18 @@ This is a Risk-style simulation using the [Hexagon Based Map Generator](https://
 
 It is currently [live on Heroku](https://hmg-wargame.herokuapp.com) (it may take a minute for the dynos to spin up), or you can download or clone the files (`git clone`).
 Once downloaded, set up a virtual environment (`python3 -m venv env`) and install the requirements (`pip3 install requirements.txt`).
-From there, you can host the server locally with the command `flask run`.
+From there, you can host the server locally with the command `flask run`. Or, you can run the simulation in the terminal from the `game.py` file.
+Simply run the command `python3 game.py`
 
-The home page (which also has instructions and descriptions) provides several options to adjust how the map is generated. The impacts of these are described later, in the [How it Works](#how-it-works) section. These options can be left as default or changed to suit your liking.
+The home page (which also has instructions and descriptions) provides several options to adjust how the map is generated. These options can be left as default or changed to suit your liking. The only new option introduced in Wargame is the number of kingdoms to start
 
 Once you've set some options, click "Generate" and a map will be made using those options.
+After a map has been generated, clicke "Run Simulation" to begin the simulation. You can stop it with the "Stop Simulation" button.
+While the game is running, you can open the browser console (via Right Click > Inspect Element) to view stats of each kingdom.
+
 From the Map screen, you can decide to generate another map with the same settings. If you do so, the map will be lost.
 To avoid this, you can save the map. If you wish, you can also change the name of the map before (or after) saving.
-Once saved, you can always come back to the map screen with the url "https://hexmapgen.herokuapp.com/map/{Map-Name}"
+Once saved, you can always come back to the map screen with the url "https://hmg-wargame.herokuapp.com/map/{Map-Name}"
 You can delete a map you've saved from the map screen.
 
 On any screen, you can use the Navbar to reach another screen. Clicking the name of the site, or "Home" will take you to the home page, with the options to generate a new map. "Map" will take you directly to a newly generated map using the default options. "Saved Maps" takes you to the list of all currently saved maps.
