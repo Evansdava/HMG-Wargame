@@ -1,6 +1,77 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<script type="text/python">
+    from browser import document
+    from browser.timer import request_animation_frame as raf
+    from browser.timer import cancel_animation_frame as caf
+    from browser.timer import set_timeout
+    from static.scripts.python.game import GameRunner
+    from static.scripts.python.map import Map
+
+    colors = {
+        "F":"green",
+        "W":"deepskyblue",
+        "R":"orange",
+        "B":"darkred",
+        ".":"lightgray",
+        "0":"limegreen",
+        "1":"red",
+        "2":"gold",
+        "3":"darkslateblue",
+        "4":"hotpink",
+        "5":"darkseagreen",
+        "6":"teal",
+        "7":"steelblue",
+        "8":"burlywood",
+        "9":"darkviolet",
+        "None":"lightgray",
+    }
+
+    field = Map(length={{map.length}}, width={{map.width}}, kingdoms={{ map.kingdoms|length }})
+    kings = [kingdom.name for kingdom in field.kingdoms]
+    for hex in field.hexes:
+        hex_info = document[str(hex.id)].parent.attrs["name"]
+        hex.terrain = hex_info[0]
+        if hex_info[1] in kings:
+            hex.owner = field.kingdoms[kings.index(hex_info[1])]
+            hex.owner.territory = [hex]
+        else:
+            hex.owner = None
+
+    id = 0
+    print("Map initialized")
+    gr = GameRunner(field)
+    print("Game ready")
+
+    def run(ev):
+        raf(turn)
+
+    def stop(ev):
+        global id
+        caf(id)
+
+    def turn(i):
+        global gr
+        global id
+        cont = gr.turn()
+        print(gr.field)
+        for hex in gr.field.hexes:
+            document[str(hex.id)].style.backgroundColor = colors[str(hex.owner)]
+
+        for kingdom in gr.field.kingdoms:
+            print("Kingdom", colors[str(kingdom)], "Size:", len(kingdom))
+            print(f"ADM: {kingdom.powers['adm']}", end=" ")
+            print(f"DIP: {kingdom.powers['dip']}", end=" ")
+            print(f"MIL: {kingdom.powers['mil']}")
+            print(f"Rival: {colors[str(kingdom.rival)]}", end=" ")
+            print(f"Allies: {[colors[str(king)] for king in kingdom.allies]}")
+
+        id = raf(turn)
+
+    document["run_sim"].bind("click", run)
+    document["stop_sim"].bind("click", stop)
+</script>
 <div class="d-flex container-fluid justify-content-center">
     <!-- Submitting the form changes the name, the delete button is a redirect -->
     <form action="/map/edit/{{map.name}}" method="POST">
@@ -8,6 +79,8 @@
         {% include 'partials/map_display.html' %}
         <br>
         <br>
+        <button id="run_sim" class="btn btn-success m-4" type="button">Run Simulation</button>
+        <button id="stop_sim" class="btn btn-danger m-4" type="button">Stop Simulation</button>
         <a href="/map/delete/{{map.name}}"><button class="btn btn-danger m-4" type="button">Delete Map</button></a>
     </form>
 </div>

@@ -31,23 +31,22 @@ class GameRunner(object):
 
 
 if __name__ == '__main__':
-    i_list = []
-    for _ in range(30):
-        field = Map(kingdoms=4)
-        gr = GameRunner(field)
-        i = 0
-        while gr.turn() is not False:
-            print(gr.field)
-            for kingdom in gr.field.kingdoms:
-                print("Kingdom", str(kingdom), "Size:", len(kingdom))
-                print(f"ADM: {kingdom.powers['adm']}", end=" ")
-                print(f"DIP: {kingdom.powers['dip']}", end=" ")
-                print(f"MIL: {kingdom.powers['mil']}")
-                print(f"Rival: {kingdom.rival}", end=" ")
-                print(f"Allies: {[str(king) for king in kingdom.allies]}")
-            i += 1
-            if i >= 1500:
-                break
-        print(i, "rounds")
-        i_list.append(i)
-    print(sum(i_list) / len(i_list))
+    # i_list = []
+    field = Map(kingdoms=4)
+    gr = GameRunner(field)
+    i = 0
+    while gr.turn() is not False:
+        print(gr.field)
+        for kingdom in gr.field.kingdoms:
+            print("Kingdom", str(kingdom), "Size:", len(kingdom))
+            print(f"ADM: {kingdom.powers['adm']}", end=" ")
+            print(f"DIP: {kingdom.powers['dip']}", end=" ")
+            print(f"MIL: {kingdom.powers['mil']}")
+            print(f"Rival: {kingdom.rival}", end=" ")
+            print(f"Allies: {[str(king) for king in kingdom.allies]}")
+        i += 1
+        if i >= 1500:
+            break
+    print(i, "rounds")
+    # i_list.append(i)
+    # print(sum(i_list) / len(i_list))
