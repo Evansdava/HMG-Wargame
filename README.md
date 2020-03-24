@@ -1,10 +1,10 @@
-# Welcome to HexMapGen
+# Welcome to HexMapGen Wargame
 
-This is a hex-based map generator for making small-scale battlemaps as would be used in Lancer, Dungeons and Dragons, or other tabletop RPGs.
+This is a Risk-style simulation using the [Hexagon Based Map Generator](https://hexmapgen.herokuapp.com) I built as a basis.
 
 ## Using this Program:
 
-It is currently [live on Heroku](https://hexmapgen.herokuapp.com) (it may take a minute for the dynos to spin up), or you can download or clone the files (`git clone`).
+It is currently [live on Heroku](https://hmg-wargame.herokuapp.com) (it may take a minute for the dynos to spin up), or you can download or clone the files (`git clone`).
 Once downloaded, set up a virtual environment (`python3 -m venv env`) and install the requirements (`pip3 install requirements.txt`).
 From there, you can host the server locally with the command `flask run`.
 
@@ -20,30 +20,76 @@ On any screen, you can use the Navbar to reach another screen. Clicking the name
 
 ## How it Works:
 
-### Each hex on the map is an object of the Hex class. The hex object has several properties:
+See the [README for HexMapGen](https://github.com/Evansdava/HexMapGen) for details on map generation.
 
-* An id number: keeping track of its position in the map
-* References to the next adjacent hex on every side
-* The contents of the hex (terrain)
+### Rules for the Wargame
+
+#### Each kingdom has three types of power:
+* Military
+* Administrative
+* Diplomatic
 
 
-### The map is itself an object of the Map class that contains all associated hex objects, as well as a few other properties:
+Military power, in abstract, represents the amount and quality of troops, weapons, machines, and other tools of war available. It is used for attacks, and increases with a kingdom's size and with the buildings conquered. It decreases when losing territory.
 
-* Name (The name of the map)
-* Length (The number of rows in the map)
-* Width (The number of hexes in a particular row)
-* Percentage chances for each type of terrain to appear in any given hex.
+Administrative power represents how effectively a kingdom can function, including raising taxes, passing and enforcing laws, creating and supplying armies, and so on. The more a kingdom expands, the more adminstrative power it needs. It increases somewhat with size, by conquering roads, and by taking the stabilize action. It decreases when losing territory.
 
-Chances are represented as floating point (decimal) numbers with a value from 0 to 1.
-Though it's possible to input a value higher than 1, it may cause erroneous behavior.
+Diplomatic power represents the efficacy of a kingdom's diplomats, spies, courtiers, and other agents of foreign affairs. Diplomatic power makes it easier to forge alliances and makes it more difficult for others to break them. It increases with forests and rivers controlled, and by maintaining alliances. It is reduced when breaking alliances.
 
-### The different types of terrain have different chances to appear:
 
-1. Forests are represented in green, and can spawn anywhere, and are more likely to spawn next to other forests. By default, they have a 10% chance to appear on a given hex, or 20% next to other forests.
-1. Rivers are represented in blue, spawn from an edge, and meander across the map afterwards. Rivers can overwrite forests that are in their path. By default, they have a 2% chance to appear on any given edge tile
-1. Roads are represented in orange, spawn from an edge, and follow straight lines to another edge. Roads can overwrite rivers and forests in their path. By default, they also have a 2% chance to appear on any given edge tile.
-1. Buildings are represented in red, spawn next to roads or other buildings, and can overwrite forests, but not rivers or roads. By default, they have a 20% chance to spawn on a square adjacent to a road or other building.
-1. Anywhere without other terrain is gray
+Conflicts are the method of interacting with other kingdoms. A conflict can be of any power. Conflicts are resolved when each kingdom rolls a die of a number of sides equal to the total size of the map. If this roll is under the corresponding power number, that roll is successful. If both kindoms in a conflict are successful or unsuccessful, the roll is repeated until one is successful and the other is not.
+
+
+
+### On its turn, a kingdom can perform one of three actions:
+
+* Attack
+* Ally
+* Stabilize
+
+
+Attacking is the way to grow one's borders. A kingdom can attack a number of times equal to the number of border tiles you have. If the attack targets an unoccupied tile, that tile is automatically taken. Against another kingdom, attacking triggers a military conflict, the winner of which gains or retains control of the tile.
+
+##### Conditions to attack:
+* Territory is adjacent
+* Admin is high enough
+
+##### Modifiers to attack:
++ Tile is unowned
++ Tile terrain is desirable
++ Owner of tile is weaker
++ Owner of tile is a rival
++ Owner of tile is a rival of an ally
++ Tile is adjacent to multiple controlled tiles
+- Owner of tile is stronger
+- Owner of tile is an ally
+
+
+Allying is a way for a kingdom to protect itself against threats. Kingdoms are less likely to attack an ally's tiles, and must win a diplomatic conflict to do so at all. Kingdoms are more likely to attack the tiles of an ally's rival. Each kingdom has one rival, which is usually the largest threat to the kingdom. When allying a target, a diplomatic conflict is triggered, and if successful, an alliance is formed.
+
+##### Conditions to ally:
+* Target is not a rival
+* The target's rival is not the kingdom
+
+##### Modifiers to ally:
++ Target and kingdom have the same rival
++ Target is stronger
++ Other kingdoms pose a large threat
+- Target poses a large threat
+- Target has adjacent tiles
+- Target is weaker
+
+
+Stabilizing is how kingdoms gain more Administrative power. It also temporarily raises Military power. When stabilizing, an administrative conflict is triggered against a kingdom's rival. If the rival kingdom wins, the increases to both Administrative and Military power are halved.
+
+##### Conditions to stabilize:
+* None
+
+##### Modifiers to stabilize:
++ More Administrative power is required to conquer territory
++ All neighboring kingdoms are stronger
+- There are easy targets for expansion
+- More Administrative power is not required
 
 ## Known Issues:
 
@@ -57,3 +103,5 @@ This project was written in Python 3 on a Flask development server, with Jinja2 
 Redis is used for the database to store and retrieve maps.
 
 Names are generated randomly by the Uzby API.
+
+Browser scripting is written in Python using Brython
