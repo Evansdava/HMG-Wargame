@@ -48,7 +48,7 @@ class Kingdom(object):
                     for tile in self.territory]) + diplo)
         }
 
-        # Start the game allies
+        # Start the game without allies or rival
         self.allies = []
         self.rival = None
 
@@ -218,6 +218,10 @@ class Kingdom(object):
         other_mod += stable_mods[1]
         self_target = min(self.powers[power] + self_mod, self.die - 1)
         other_target = min(other.powers[power] + other_mod, self.die - 1)
+        self_great = self_target // 2
+        self_extreme = self_target // 4
+        other_great = other_target // 2
+        other_extreme = other_target // 4
         if self_target < 0:
             return False
         elif other_target < 0:
@@ -230,12 +234,27 @@ class Kingdom(object):
 
             # Success is based on whichever power is used
             success = self_roll <= self_target
+            great_success = self_roll <= self_great
+            extreme_success = self_roll <= self_extreme
             other_success = other_roll <= other_target
+            other_great_success = other_roll <= other_great
+            other_extreme_success = other_roll <= other_extreme
 
-            # If one is successful and the other isn't, there is a winner
-            if success and not other_success:
-                return True
-            elif other_success and not success:
+            # If both are successful, the greater margin wins
+            if success:
+                if not other_success:
+                    return True
+                elif great_success:
+                    if not other_great_success:
+                        return True
+                    elif other_extreme_success:
+                        return False
+                elif extreme_success:
+                    if not other_extreme_success:
+                        return True
+                elif other_great_success:
+                    return False
+            elif other_success:
                 return False
 
     def attack(self, tile):
@@ -338,8 +357,10 @@ class Kingdom(object):
         max_chance = attack_chance + ally_chance + stable_chance
         roll = randint(0, max_chance)
         if roll <= attack_chance:
-            tile = self._choose_attack_target()[0]
-            self.attack(tile)
+            # Attack up to 8 times based on territory
+            for _ in range(self.die // self.eighth):
+                tile = self._choose_attack_target()[0]
+                self.attack(tile)
         elif roll <= attack_chance + ally_chance:
             ally = self._choose_ally_target()
             if ally is not None:
