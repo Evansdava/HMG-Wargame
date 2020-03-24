@@ -59,14 +59,14 @@ Attacking is the way to grow one's borders. A kingdom can attack a number of tim
 * Admin is high enough
 
 ##### Modifiers to attack:
-+ Tile is unowned
-+ Tile terrain is desirable
-+ Owner of tile is weaker
-+ Owner of tile is a rival
-+ Owner of tile is a rival of an ally
-+ Tile is adjacent to multiple controlled tiles
-- Owner of tile is stronger
-- Owner of tile is an ally
+\+ Tile is unowned
+\+ Tile terrain is desirable
+\+ Owner of tile is weaker
+\+ Owner of tile is a rival
+\+ Owner of tile is a rival of an ally
+\+ Tile is adjacent to multiple controlled tiles
+\- Owner of tile is stronger
+\- Owner of tile is an ally
 
 
 Allying is a way for a kingdom to protect itself against threats. Kingdoms are less likely to attack an ally's tiles, and must win a diplomatic conflict to do so at all. Kingdoms are more likely to attack the tiles of an ally's rival. Each kingdom has one rival, which is usually the largest threat to the kingdom. When allying a target, a diplomatic conflict is triggered, and if successful, an alliance is formed.
@@ -76,12 +76,12 @@ Allying is a way for a kingdom to protect itself against threats. Kingdoms are l
 * The target's rival is not the kingdom
 
 ##### Modifiers to ally:
-+ Target and kingdom have the same rival
-+ Target is stronger
-+ Other kingdoms pose a large threat
-- Target poses a large threat
-- Target has adjacent tiles
-- Target is weaker
+\+ Target and kingdom have the same rival
+\+ Target is stronger
+\+ Other kingdoms pose a large threat
+\- Target poses a large threat
+\- Target has adjacent tiles
+\- Target is weaker
 
 
 Stabilizing is how kingdoms gain more Administrative power. It also temporarily raises Military power. When stabilizing, an administrative conflict is triggered against a kingdom's rival. If the rival kingdom wins, the increases to both Administrative and Military power are halved.
@@ -90,10 +90,10 @@ Stabilizing is how kingdoms gain more Administrative power. It also temporarily 
 * None
 
 ##### Modifiers to stabilize:
-+ More Administrative power is required to conquer territory
-+ All neighboring kingdoms are stronger
-- There are easy targets for expansion
-- More Administrative power is not required
+\+ More Administrative power is required to conquer territory
+\+ All neighboring kingdoms are stronger
+\- There are easy targets for expansion
+\- More Administrative power is not required
 
 ## Known Issues:
 
