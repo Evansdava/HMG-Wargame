@@ -1,4 +1,5 @@
 # Welcome to HexMapGen Wargame
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/evansdava/hmg-wargame)
 
 This is a Risk-style simulation using the [Hexagon Based Map Generator](https://hexmapgen.herokuapp.com) I built as a basis.
 
