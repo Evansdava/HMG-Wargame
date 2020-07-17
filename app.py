@@ -12,7 +12,7 @@ except ModuleNotFoundError:
     from static.scripts.python.map import Map
 
 # Setting up redis/flask environments
-redis = redis.Redis(host='redis', port=6379)
+redis = redis.Redis(host='srv-captain--redis', port=6379)
 
 try:
     redis.set("test", 0)
