@@ -7,14 +7,21 @@ import redis
 from flask import Flask, render_template, request, redirect, url_for
 sys.path.append('./static/scripts/python')
 try:
-    from static.scripts.python.map import Map
-except ModuleNotFoundError:
     from map import Map
-
+except ModuleNotFoundError:
+    from static.scripts.python.map import Map
 
 # Setting up redis/flask environments
-redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
-redis = redis.from_url(redis_url)
+redis = redis.Redis(host='redis', port=6379)
+
+try:
+    redis.set("test", 0)
+    redis.delete("test")
+except:
+    redis_url = os.getenv('REDISTOGO_URL',
+                          'redis://localhost:6379')
+    redis = redis.from_url(redis_url)
+
 app = Flask(__name__)
 sys.setrecursionlimit(2000)
 
