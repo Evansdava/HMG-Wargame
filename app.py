@@ -4,11 +4,12 @@ import sys
 import pickle
 import redis
 # import json
+from flask import Flask, render_template, request, redirect, url_for
+sys.path.append('./static/scripts/python')
 try:
     from static.scripts.python.map import Map
 except ModuleNotFoundError:
     from map import Map
-from flask import Flask, render_template, request, redirect, url_for
 
 
 # Setting up redis/flask environments
